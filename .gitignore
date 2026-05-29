@@ -18,7 +18,6 @@ lib-cov
 coverage
 
 node_modules
-dist
 vendor
 .tscache
 coverage
@@ -37,3 +36,18 @@ coverage
 
 # Codealike
 codealike.json
+
+# Local deployment scripts (not for version control)
+deploy.sh
+
+# yarn lockfile (use npm/package-lock.json instead)
+yarn.lock
+
+# Local environment / secrets
+.env
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Copilot session files
+copilot-session-*.mddist

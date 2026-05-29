@@ -7,10 +7,23 @@ services:
     build:
       context: ./.config
       args:
-        grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
-        grafana_version: ${GRAFANA_VERSION:-10.3.3}
+        grafana_image: ${GRAFANA_IMAGE:-grafana}
+        grafana_version: ${GRAFANA_VERSION:-13.0.1-security-01}
     ports:
-      - 3000:3000/tcp
+      - 3002:3000/tcp
     volumes:
       - ./dist:/var/lib/grafana/plugins/gridprotectionalliance-osisoftpi-datasource
       - ./provisioning:/etc/grafana/provisioning
+    environment:
+      # Grafana 12 needs anonymous enabled for /api/frontend/settings bootstrap call.
+      # Anonymous org_role must be Viewer (Admin is deprecated in Grafana 12).
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_BASIC_ENABLED=true
+      # Log level — set to "debug" in your .env to see streaming WebSocket activity
+      - GF_LOG_LEVEL=${GF_LOG_LEVEL:-info}
+      # Pass PI Web API credentials into the container so the provisioned datasource
+      # can be auto-configured on first start (see provisioning/datasources/piwebapi.yaml).
+      - PI_URL=${PI_URL:-}
+      - PI_USER=${PI_USER:-}
+      - PI_PASSWORD=${PI_PASSWORD:-}
